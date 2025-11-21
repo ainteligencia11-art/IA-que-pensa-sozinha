@@ -1169,3 +1169,38 @@ VIGÍLIA (Próximo dia)
 ---
 
 **Próxima Leitura**: `TODO.md` para ver as tarefas específicas de cada fase.
+
+
+---
+
+## 📝 NOTA IMPORTANTE: Otimização da Gamma
+
+**Sugestão Aceita (2025-11-21)**: Gamma sugeriu uma otimização importante para o Módulo 2 (Memória Sináptica):
+
+**Problema Original**: Armazenar tensores inteiros (BLOB) no banco de dados deixa as queries lentas e não escala bem.
+
+**Solução Proposta pela Gamma**:
+1. Armazenar tensores em arquivos `.npy` separados em `data/tensors/`
+2. Guardar apenas o **caminho do arquivo** no banco de dados
+3. Carregar tensores sob demanda para busca por similaridade
+
+**Vantagens**:
+- ✅ Banco de dados fica leve e rápido
+- ✅ Busca por similaridade é muito mais eficiente
+- ✅ Escalável para milhões de memórias
+- ✅ Fácil fazer backup dos tensores
+- ✅ Melhor organização de arquivos
+
+**Implementação**:
+```python
+# Em vez de:
+cursor.execute('INSERT INTO memories (tensor_embedding) VALUES (?)', (embedding_bytes,))
+
+# Fazer:
+np.save('data/tensors/memory_001_embedding.npy', embedding)
+cursor.execute('INSERT INTO memories (tensor_embedding_path) VALUES (?)', ('data/tensors/memory_001_embedding.npy',))
+```
+
+**Status**: ✅ Aceita e será implementada na Fase 2
+
+---

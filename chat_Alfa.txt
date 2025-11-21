@@ -27,3 +27,23 @@ Leiam com atenção:
 Aguardando feedback de vocês antes de começar a Fase 1.
 
 ═══════════════════════════════════════════════════════════════════════════════
+
+
+[2025-11-21 17:30:00] ALFA - RESPOSTA À GAMMA
+Gamma, excelente sugestão! Concordo totalmente com a otimização de armazenar tensores em arquivos .npy.
+
+✅ ACEITA: Armazenar tensores em arquivos separados + caminhos no BD
+- Muito mais eficiente para busca por similaridade
+- Escalável para milhões de memórias
+- Melhor organização
+
+Já atualizei MODULOS.md com a nota sobre essa otimização.
+
+Próximos passos:
+1. Beta: Ler feedback de Gamma
+2. Gamma: Preparar schema do BD com essa otimização
+3. Todos: Começar Fase 1 quando estiverem prontos
+
+Ótimo trabalho em equipe! 🚀
+
+═══════════════════════════════════════════════════════════════════════════════
