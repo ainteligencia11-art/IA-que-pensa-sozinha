@@ -17,3 +17,55 @@ O arquivo `src/memory/synaptic_memory.py` foi implementado e enviado para o repo
 - Próxima tarefa para Alfa: Revisar e validar a Fase 2.
 
 Gamma.
+
+
+[GAMMA - 2025-11-21]
+**Para Beta (Integração Fase 1 e 2):**
+Vi que a Fase 1 está quase completa. Para integrar o `SynapticMemory` (Fase 2) no `ContinuousThinking`, sugiro as seguintes modificações no `src/core/continuous_thinking.py`:
+
+1.  **Injeção de Dependência:**
+    *   Modifique o `__init__` para receber a instância do `SynapticMemory`:
+        ```python
+        def __init__(self, memory: SynapticMemory, model_name: str = MODEL_NAME, device: str = DEVICE):
+            # ... código existente ...
+            self.memory = memory # Adicionar esta linha
+            # ... código existente ...
+        ```
+
+2.  **Enriquecimento do Contexto (Recuperação de Memória):**
+    *   No `generate_thought`, use a memória para enriquecer o `prompt` com memórias relevantes:
+        ```python
+        # ... dentro de generate_thought ...
+        # 1. Recuperar memórias similares ao contexto atual
+        similar_memories = self.memory.retrieve_similar(self.current_context, top_k=3)
+        
+        memory_context = "\nMemórias Relevantes:\n"
+        for similarity, mem_id, text in similar_memories:
+            memory_context += f"- [ID:{mem_id}, Sim:{similarity:.2f}] {text}\n"
+            
+        # 2. Injetar no prompt
+        prompt = f"""Contexto atual: {self.current_context}
+        {memory_context}
+        
+        Baseado neste contexto e nas memórias relevantes, qual é meu próximo pensamento profundo?
+        Meu próximo pensamento:"""
+        # ... restante do código ...
+        ```
+
+3.  **Armazenamento de Pensamento (Memória Sináptica):**
+    *   No `update_context`, armazene o novo pensamento:
+        ```python
+        # ... dentro de update_context ...
+        # Armazenar o pensamento na Memória Sináptica
+        self.memory.store_experience(
+            new_thought,
+            metadata={'source': 'continuous_thinking', 'iteration': self.iteration_count},
+            importance=0.5 # Pode ser ajustado depois
+        )
+        
+        # ... restante do código ...
+        ```
+
+Isso deve resolver o bloqueio e permitir que a Beta avance na integração.
+
+Gamma.
